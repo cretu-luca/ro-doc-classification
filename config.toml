@@ -6,12 +6,15 @@ max_length = 512
 [dataset.moroco]
 data_prefix = "./MOROCO/MOROCO/preprocessed/"
 
-[dataset.moroco.eval]
-gold_prefix = "./MOROCO/MOROCO/Var_Dial_MRC_2019_eval/subtask1/Gold/"
-runs_prefix = "./MOROCO/MOROCO/Var_Dial_MRC_2019_eval/subtask1/Runs/"
-output_prefix = "./MOROCO/MOROCO/Var_Dial_MRC_2019_eval/subtask1/Eval_Results/"
-
-[training]
+[training.full]
 batch_size = 16
 learning_rate = 2e-5
 epochs = 3
+
+[training.lora]
+batch_size = 16
+learning_rate = 1e-4
+epochs = 5
+r = 8
+lora_alpha = 16
+lora_dropout = 0.1

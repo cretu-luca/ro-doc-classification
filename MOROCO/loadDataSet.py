@@ -19,15 +19,12 @@
 from os import listdir, makedirs
 from os.path import isfile, join, splitext, exists
 
-# Assume the data set is in the below subfolder
-inputDataPrefix = "./MOROCO/preprocessed/"
 
-# Loads the samples in the train, validation, or test set
-def loadMOROCODataSamples(subsetName):
+def loadMOROCODataSamples(subsetName, data_prefix):
 
-    inputSamplesFilePath = (inputDataPrefix + "%s/samples.txt") % (subsetName)
-    inputDialectLabelsFilePath = (inputDataPrefix + "%s/dialect_labels.txt") % (subsetName)
-    inputCategoryLabelsFilePath = (inputDataPrefix + "%s/category_labels.txt") % (subsetName)
+    inputSamplesFilePath = (data_prefix + "%s/samples.txt") % (subsetName)
+    inputDialectLabelsFilePath = (data_prefix + "%s/dialect_labels.txt") % (subsetName)
+    inputCategoryLabelsFilePath = (data_prefix + "%s/category_labels.txt") % (subsetName)
     
     IDs = []
     samples = []
@@ -65,20 +62,24 @@ def loadMOROCODataSamples(subsetName):
     # IDs[i] is the ID of the sample samples[i] with the dialect label dialectLabels[i] and the category label categoryLabels[i]
     return IDs, samples, dialectLabels, categoryLabels
 
-# Loads the data set
-def loadMOROCODataSet():
+
+def loadMOROCODataSet(data_prefix):
     
-    trainIDs, trainSamples, trainDialectLabels, trainCategoryLabels = loadMOROCODataSamples("train")
+    trainIDs, trainSamples, trainDialectLabels, trainCategoryLabels = loadMOROCODataSamples("train", data_prefix)
     print("Loaded %d training samples..." % len(trainSamples))
 
-    validationIDs, validationSamples, validationDialectLabels, validationCategoryLabels = loadMOROCODataSamples("validation")
+    validationIDs, validationSamples, validationDialectLabels, validationCategoryLabels = loadMOROCODataSamples("validation", data_prefix)
     print("Loaded %d validation samples..." % len(validationSamples))
 
-    testIDs, testSamples, testDialectLabels, testCategoryLabels = loadMOROCODataSamples("test")
+    testIDs, testSamples, testDialectLabels, testCategoryLabels = loadMOROCODataSamples("test", data_prefix)
     print("Loaded %d test samples..." % len(testSamples))
 
-    # The MOROCO data set is now loaded in the memory.
-    # Implement your own code to train and evaluation your own model from this point on.
-    # Perhaps you want to return the variables or transform them into your preferred format first...
+    return {
+        "train": (trainIDs, trainSamples, trainDialectLabels, trainCategoryLabels),
+        "validation": (validationIDs, validationSamples, validationDialectLabels, validationCategoryLabels),
+        "test": (testIDs, testSamples, testDialectLabels, testCategoryLabels),
+    }
 
-loadMOROCODataSet()
+
+if __name__ == "__main__":
+    loadMOROCODataSet("./MOROCO/preprocessed/")
