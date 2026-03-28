@@ -1,4 +1,8 @@
+import json
 import time
+import shutil
+from pathlib import Path
+
 import torch
 import numpy as np
 from torch.utils.data import DataLoader
@@ -30,13 +34,14 @@ def evaluate(model, dataset, device, batch_size):
             all_labels.extend(batch["labels"].cpu().numpy())
 
     report = classification_report(all_labels, all_preds, target_names=CATEGORY_NAMES)
+    report_dict = classification_report(all_labels, all_preds, target_names=CATEGORY_NAMES, output_dict=True)
     cm = confusion_matrix(all_labels, all_preds)
 
     print(report)
     print("Confusion matrix:")
     print(cm)
 
-    return all_labels, all_preds, report, cm
+    return all_labels, all_preds, report_dict, cm
 
 
 def measure_latency(model, tokenizer, sample_text, device, max_length, iterations=50):
@@ -54,3 +59,37 @@ def measure_latency(model, tokenizer, sample_text, device, max_length, iteration
     avg_ms = (end - start) * 1000 / iterations
     print(f"Average Inference Latency: {avg_ms:.2f} ms per document ({iterations} iterations)")
     return avg_ms
+
+
+def save_results(output_dir, config, trainer, report_dict, cm, latency_ms, trainable_params, total_params):
+    out = Path(output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+
+    run_name = out.name
+    model_dir = Path("models") / run_name
+    model_dir.mkdir(parents=True, exist_ok=True)
+
+    shutil.copy("config.toml", out / "config.toml")
+
+    with open(out / "training_history.json", "w") as f:
+        json.dump(trainer.state.log_history, f, indent=2, default=str)
+
+    train_metrics = {k: v for k, v in trainer.state.log_history[-1].items() if "train_" in k or "runtime" in k or "samples_per_second" in k or "steps_per_second" in k}
+    with open(out / "train_metrics.json", "w") as f:
+        json.dump(train_metrics, f, indent=2)
+
+    eval_results = {
+        "classification_report": report_dict,
+        "confusion_matrix": cm.tolist(),
+        "latency_ms": latency_ms,
+        "trainable_params": trainable_params,
+        "total_params": total_params,
+        "trainable_pct": round(100 * trainable_params / total_params, 2),
+    }
+    with open(out / "eval_results.json", "w") as f:
+        json.dump(eval_results, f, indent=2)
+
+    trainer.save_model(str(model_dir))
+
+    print(f"Results saved to {out}/")
+    print(f"Model saved to {model_dir}/")

@@ -205,3 +205,12 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Model weights
+*.safetensors
+*.bin
+!models/*/adapter_config.json
+!models/*/config.json
+
+# Dataset files
+MOROCO/MOROCO/preprocessed/
