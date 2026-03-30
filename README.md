@@ -2,8 +2,6 @@
 
 We are given the task of finetuning a Small Language Model (SLM) for text classification, for which we use consumer hardware -- MacBook Pro 14", Apple M4 Pro (12 CPU, 16 GPU), 24 GB RAM. 
 
-Our results show the family of models we picked, together with finetuning strategies we used represent a potential solution in real work scenarios, which feature both large and small source datasets of documents and can further be integrated within a document classification pipeline. However, we acknowledge a product-grade solution requires a larger accuracy (e.g. above 90%) and we argue such results can be accomplished by using SLM's with more parameters (e.g.`readerbench/RoBERT-large`) and better hyperparameters, together with more computing power and time resources. 
-
 We pick the [ReaderBench RoBERT](https://huggingface.co/readerbench/RoBERT-small) family of models as backbones for our classification models and use the [MOROCO](https://aclanthology.org/P19-1068/) dataset for six news categories (culture, finance, politics, science, sports, tech), suitable for Romanian and Moldavian language tasks. 
 
 Outputs and saved configs: `outputs/` (`outputs/<run>/config.toml` per run).
@@ -56,7 +54,11 @@ Latency: mean over repeated forwards on one tokenized example (`src/eval/metrics
 
 LoRA uses five epochs; full fine-tuning uses three, so wall time does not scale with “fewer trainable parameters” alone. Latency numbers are in section 2.
 
-## 4. Environment
+## 4. Conclusion
+
+Our results show the family of models we picked, together with finetuning strategies we used represent a potential solution in real work scenarios, which feature both large and small source datasets of documents and can further be integrated within a document classification pipeline. However, we acknowledge a product-grade solution requires a larger accuracy (e.g. above 90%) and we argue such results can be accomplished by using SLM's with more parameters (e.g.`readerbench/RoBERT-large`) and better hyperparameters, together with more computing power and time resources. 
+
+## 5. Environment
 
 ```bash
 # uv
