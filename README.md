@@ -1,4 +1,4 @@
-# ro-doc-classification
+# Technical Report
 
 We are given the task of finetuning a Small Language Model (SLM) for text classification, for which we use consumer hardware -- MacBook Pro 14", Apple M4 Pro (12 CPU, 16 GPU), 24 GB RAM. 
 
