@@ -12,7 +12,7 @@ Outputs and saved configs: `outputs/` (`outputs/<run>/config.toml` per run).
 
 Backbones: `readerbench/RoBERT-small`, `readerbench/RoBERT-base`. For full finetuning runs, we consider 3 epochs with learning rate `2e-5`. For LoRA runs, we consider 5 epochs, with hyperparamters `r=8`, `lora_alpha=16`, `lora_dropout=0.1`, `1e-4`. Batch size 16 for all (see `config.toml`).
 
-Based on computational cost, we consider `full-small` to be most suitable for our budget-constrained scenario. Therefore, we consider a less favorable task, with less training data to further test the limits of our model and finetuning strategy and use a **20%** subset of the training split for **10 epochs** at **1e-5** (see `src/notebooks/finetune_full.ipynb`; saved under `outputs/full-data-scarce`).
+Based on performance (Section 2) and computational cost (Section 3) of our 4 initial finetuned models (`full-small`, `full-base`, `lora-small`, `lora-base`), we consider `full-small` (full finetuning the smaller model) to be the most promising for our budget-constrained scenario. Therefore, we consider another more challenging setting, with less training data to further test the limits of our model and finetuning strategy (`full-data-scarce`) and use a **20%** subset of the training split for **10 epochs** at **1e-5** (see `src/notebooks/finetune_full.ipynb`; saved under `outputs/full-data-scarce`).
 
 
 | Run directory      | Backbone                   | Finetune Strategy            | Trainable params | Total params | Trainable % |
